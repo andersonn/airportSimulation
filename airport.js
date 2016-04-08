@@ -21,7 +21,18 @@ loader.load('b737/model.dae', function(collada){
     scene.add(model);
 });
 
-
+var terminal = new THREE.Object3D();
+loader.load('terminal/model.dae', function(collada){
+    terminal.add(collada.scene);
+    terminal.scale.multiplyScalar(.04);
+    terminal.rotateY(Math.PI/2);
+    terminal.translateY(.15)
+    var mod = new THREE.Object3D();
+    mod.add(terminal);
+    mod.translateX(19);
+    mod.translateZ(12);
+    scene.add(mod);
+});
 var schedule = new Schedule(5, 96);
 //schedule.printArrivals();
 //console.log("Departures");
