@@ -1,12 +1,12 @@
 //handles messages of the airplanes
 //Take off and land
 
-class ControlTower{
-    constructor(){
+function ControlTower(){
         this.onTarmac = false;
-    }
+    };
+    ControlTower.prototype.constructor = ControlTower;
 
-    requestLanding(){
+    ControlTower.prototype.requestLanding = function(){
         if(this.onTarmac){
             return false;
         }
@@ -15,7 +15,7 @@ class ControlTower{
         }
     }
 
-    requestTakeoff(){
+    ControlTower.prototype.requestTakeoff = function(){
         if(this.onTarmac){
             return false;
         }
@@ -23,8 +23,6 @@ class ControlTower{
             return true;
         }
     }    
-    setTarmac(){
+    ControlTower.prototype.setTarmac = function(){
         this.onTarmac = !this.onTarmac;
     }
-}
-

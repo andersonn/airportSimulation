@@ -1,13 +1,13 @@
 //Handles what an airplane can do.
 
-class Airplane{
-    contructor(controlTower){
+function Airplane(controlTower){
         this.controlTower = controlTower;
         this.flightPlan = new flightPlan(); //TODO add runway locations
         this.onGround = true;
-    }
+    };
     
-    requestTakeOff(){
+    Airplane.prototype.constructor = Airplane;
+    Airplane.prototype.requestTakeOff = function(){
         if(this.controlTower.requestTakeOff()){
             //startTakeOff
         }
@@ -16,7 +16,7 @@ class Airplane{
         }
     }
 
-    requestLanding(){
+    Airplane.prototype.requestLanding = function(){
         if(this.controlTower.requestLanding()){
             //startLanding
         }
@@ -24,5 +24,3 @@ class Airplane{
             //fly another landing pattern
         }
     }
-
-}
