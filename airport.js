@@ -2,9 +2,25 @@
 
 //create the scene
 var scene = new THREE.Scene();
-
-
-//runway
+/*$.get("http://www.flightview.com/airport/STL-St._Louis-MO/arrivals").done(function(data){
+	console.log(data);
+});
+*/
+$.ajax({
+            url: "http://www.flightview.com/airport/STL-St._Louis-MO/arrivals",
+	    type: "GET",
+            crossDomain: true,
+            //data: JSON.stringify(somejson),
+            dataType: "json",
+            success: function (response) {
+                var resp = JSON.parse(response)
+		console.log(resp);
+                alert(resp.status);
+            },
+            error: function (xhr, status) {
+                alert("error");
+            }
+        });
 var geometry = new THREE.BoxGeometry(20,0.1, 2);
 var image = new THREE.TextureLoader().load("RunwayLarge.jpg");
 var material = new THREE.MeshLambertMaterial({map : image});
