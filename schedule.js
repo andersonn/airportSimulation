@@ -29,7 +29,7 @@ function Schedule(numberOfPlanesToStart, numberOfArrivals){
         var time = 0;
         for(var i = 0; i < this.numberOfPlanesToStart; i++){
             var departTime = time;
-            var temp = Math.floor(Math.random()*(this.locations.length+1));
+            var temp = Math.floor(Math.random()*this.locations.length);
             var city =this.locations[temp];
             var plane = {departTime: departTime,
                          city: city
@@ -40,7 +40,7 @@ function Schedule(numberOfPlanesToStart, numberOfArrivals){
         time = 0
         for(var i = 0; i < this.numberOfArrivals; i++){
             var arrivalTime = time;
-            var temp = Math.floor(Math.random()*(this.locations.length+1));
+            var temp = Math.floor(Math.random()*this.locations.length);
             var city = this.locations[temp];
             var plane = {arrivalTime: time,
                          city: city
@@ -63,7 +63,7 @@ function Schedule(numberOfPlanesToStart, numberOfArrivals){
     }
     
     Schedule.prototype.setDeparture = function(time){
-        var temp = Math.floor(Math.random()*(this.locations.length+1));
+        var temp = Math.floor(Math.random()*this.locations.length);
         var city = this.locations[temp];
         var plane = {departTime: time,
                      city: city
@@ -71,3 +71,14 @@ function Schedule(numberOfPlanesToStart, numberOfArrivals){
         this.departures.push(plane);
     }
 
+    Schedule.prototype.printArrivals = function(){
+        for(var i = 0; i<this.arrivals.length; i++){
+            console.log(this.arrivals[i]);
+        }
+    }
+
+    Schedule.prototype.printDepartures = function(){
+        for(var i = 0; i<this.departures.length; i++){
+            console.log(this.departures[i]);
+        }
+    }

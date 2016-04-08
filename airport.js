@@ -10,7 +10,9 @@ var runway = new THREE.Mesh(geometry, material);
 scene.add(runway);
 
 var schedule = new Schedule(5, 96);
-console.log(schedule.arrivals);
+schedule.printArrivals();
+console.log("Departures");
+schedule.printDepartures();
 //lighting
 scene.add(new THREE.AmbientLight(0xffffff));
 var light1 = new THREE.DirectionalLight(0xaaaaaa);
