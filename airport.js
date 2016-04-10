@@ -17,15 +17,13 @@ scene.add(runway);
 scene.add(terminalGround);
 var loader = new THREE.ColladaLoader();
 var model = new THREE.Object3D();
-var modTest = new THREE.Object3D();
 loader.load('b737/model.dae', function(collada){
     model.add(collada.scene);
-    model.scale.multiplyScalar(0.05);
+    model.scale.multiplyScalar(0.04);
     //model.translateY(.1);
     //model.translateX(-10);
     //model.translateZ(12);
-    modTest.add(model);
-    scene.add(modTest);
+    scene.add(model);
 });
 
 var terminal = new THREE.Object3D();
@@ -41,26 +39,34 @@ loader.load('terminal/model.dae', function(collada){
 });
 var schedule = new Schedule(5, 96);
 
-//Gate 1
+//Taxi to take off from gate 1
 var curve = new THREE.SplineCurve3([
-    new THREE.Vector3(-10, .1, 1.7),
-    new THREE.Vector3(-5.45, .1, 1.7),
-    new THREE.Vector3(-4.4,.1, .75),
-    new THREE.Vector3(-4.4, .1, -1.6),
-    new THREE.Vector3(-2.8, .1, -2.1),
-    new THREE.Vector3(2.25, .1, -2.1),
-    new THREE.Vector3(3.1, .1, -1),
-    new THREE.Vector3(3.1, .1, 3),
-    new THREE.Vector3(2.15, .1, 3.7),
-    new THREE.Vector3(-1, .1, 3.7),
-    new THREE.Vector3(-10.1, .1, 3.7)
+    new THREE.Vector3(-11.3, .1, 12),
+    new THREE.Vector3(-11.3, .1, 7),
+    new THREE.Vector3(-11.3, .1, 8),
+    new THREE.Vector3(-11.6, .1, 8.5),
+    new THREE.Vector3(-12, .1, 8.7),
+    new THREE.Vector3(-13, .1, 9),
+    new THREE.Vector3(-17.5, .1, 9),
+    //From here down should be the same for gate 2 and 3
+    new THREE.Vector3(-18.5, .1, 8),
+    new THREE.Vector3(-18.5, .1, 7),
+    new THREE.Vector3(-18.5, .1, -1.5),
+    new THREE.Vector3(-15.5, .1, -2.1),
+    new THREE.Vector3(-15, .1, -2.1),
+    new THREE.Vector3(-5.45, .1, -2.1),
+    new THREE.Vector3(-4.4, .1, -4),
+    new THREE.Vector3(-4.4, .1, -8),
+    new THREE.Vector3(-3.4, .1, -9),
+    new THREE.Vector3(-2, .1, -9),
+    new THREE.Vector3(3.5, .1, -9)
 ]);
 var curveGeom = new THREE.Geometry();
-curveGeom.vertices = curve.getPoints(50);
+curveGeom.vertices = curve.getPoints(1000);
 var curveMaterial = new THREE.LineBasicMaterial({color : 0xff0000});
 var splineObject = new THREE.Line(curveGeom, curveMaterial);
 scene.add(splineObject);
-console.log(curve.getPointAt(0));
+//console.log(curve.getPointAt(0));
 //lighting
 scene.add(new THREE.AmbientLight(0xffffff));
 var light1 = new THREE.DirectionalLight(0xaaaaaa);
@@ -79,13 +85,15 @@ camera.position.y = 30;
 var controls = new THREE.OrbitControls(camera, renderer.domElement);
 //update the airplanes
 x=0;
+var binormal = new THREE.Vector3();
+var normal = new THREE.Vector3();
 function render(){
     requestAnimationFrame(render);
     renderer.render(scene, camera);
     if(x<1){
-        modTest.position.copy(curve.getPointAt(x));
-        modTest.lookAt(curve.getTangentAt(x).normalize());
+        model.position.copy(curve.getPointAt(x));
+        model.rotation =curve.getTangentAt(x);
     }
-    x+=.001;
+    x+=.01;
 };
 render();
