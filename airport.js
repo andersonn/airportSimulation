@@ -17,14 +17,15 @@ scene.add(runway);
 scene.add(terminalGround);
 var loader = new THREE.ColladaLoader();
 var model = new THREE.Object3D();
-
+var modTest = new THREE.Object3D();
 loader.load('b737/model.dae', function(collada){
     model.add(collada.scene);
     model.scale.multiplyScalar(0.05);
     //model.translateY(.1);
     //model.translateX(-10);
     //model.translateZ(12);
-    scene.add(model);
+    modTest.add(model);
+    scene.add(modTest);
 });
 
 var terminal = new THREE.Object3D();
@@ -50,7 +51,9 @@ var curve = new THREE.SplineCurve3([
     new THREE.Vector3(2.25, .1, -2.1),
     new THREE.Vector3(3.1, .1, -1),
     new THREE.Vector3(3.1, .1, 3),
-    new THREE.Vector3(2.25, .1, 3.5)
+    new THREE.Vector3(2.15, .1, 3.7),
+    new THREE.Vector3(-1, .1, 3.7),
+    new THREE.Vector3(-10.1, .1, 3.7)
 ]);
 var curveGeom = new THREE.Geometry();
 curveGeom.vertices = curve.getPoints(50);
@@ -80,9 +83,9 @@ function render(){
     requestAnimationFrame(render);
     renderer.render(scene, camera);
     if(x<1){
-        model.position.copy(curve.getPointAt(x));
-        model.lookAt(curve.getTangentAt(x).normalize());
+        modTest.position.copy(curve.getPointAt(x));
+        modTest.lookAt(curve.getTangentAt(x).normalize());
     }
-    x+=.01;
+    x+=.001;
 };
 render();
