@@ -42,23 +42,34 @@ loader.load('terminal/model.dae', function(collada){
 });
 var schedule = new Schedule(5, 96);
 
-//Taxi to gate 2
+//Taxi to runway from  gate 7 
 var curve = new THREE.SplineCurve3([
-    new THREE.Vector3(-10, .1, 1.7),
-    new THREE.Vector3(-5.45, .1, 1.7),
-    new THREE.Vector3(-4.4,.1, .75),
-    new THREE.Vector3(-4.4, .1, -1.6),
-    new THREE.Vector3(-2.8, .1, -2.1),
-    new THREE.Vector3(2.25, .1, -2.1),
-    new THREE.Vector3(3.1, .1, -1),
-    new THREE.Vector3(3.1, .1, 3),
-    new THREE.Vector3(2.15, .1, 3.7),
-    new THREE.Vector3(-1, .1, 3.7),
-    new THREE.Vector3(-6.9, .1, 3.7),
-    new THREE.Vector3(-7.9, .1, 5),
-    new THREE.Vector3(-7.9, .1, 6),
-    new THREE.Vector3(-7.9, .1, 12)
+    new THREE.Vector3(11.3, .1, 12),
+    new THREE.Vector3(11.3, .1, 7),
+    new THREE.Vector3(11.3, .1, 8),
+    new THREE.Vector3(11.6, .1, 8.8),
+    new THREE.Vector3(12.4, .1, 9),
+    new THREE.Vector3(13.8, .1, 9),
+    new THREE.Vector3(15.4, .1, 9),
+    new THREE.Vector3(17, .1, 9),
+    new THREE.Vector3(18, .1, 9),
+    new THREE.Vector3(18.8, .1, 8.2),
+    new THREE.Vector3(19, .1, 7.2),
+    new THREE.Vector3(19, .1, 0),
+    new THREE.Vector3(19, .1, -4.5),
+    new THREE.Vector3(18, .1, -5.3),
+    new THREE.Vector3(14, .1, -5.3),
+    new THREE.Vector3(7, .1, -5.3),
+    new THREE.Vector3(0, .1, -5.3),
+    new THREE.Vector3(-3.4, .1, -5.3),
+    new THREE.Vector3(-4.4, .1, -6),
+    new THREE.Vector3(-4.4, .1, -7),
+    new THREE.Vector3(-4.4, .1, -8),
+    new THREE.Vector3(-3.4, .1, -9),
+    new THREE.Vector3(-2, .1, -9),
+    new THREE.Vector3(3.5, .1, -9)
 ]);
+   
 
 var curveGeom = new THREE.Geometry();
 curveGeom.vertices = curve.getPoints(1000);
@@ -94,13 +105,12 @@ function render(){
     renderer.render(scene, camera);
     if(x<1){
         mod.position.copy(curve.getPointAt(x));
-	console.log(curve.getTangentAt(x));
-	tangent = curve.getTangentAt(x).normalize();
-	axis.crossVectors(up, tangent).normalize();
-	radians = Math.acos(up.dot(tangent));
-	mod.quaternion.setFromAxisAngle(axis, radians);
+	    tangent = curve.getTangentAt(x).normalize();
+	    axis.crossVectors(up, tangent).normalize();
+	    radians = Math.acos(up.dot(tangent));
+	    mod.quaternion.setFromAxisAngle(axis, radians);
         //model.rotation.copy(curve.getTangentAt(x).applyAxisAngle(axis, angle));
     }
-    x+=.01;
+    x+=.001;
 };
 render();
