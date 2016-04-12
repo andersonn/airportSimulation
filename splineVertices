@@ -40,3 +40,22 @@ var curve = new THREE.SplineCurve3([
     new THREE.Vector3(3.5, .1, -9)
 ]);
 
+
+//Taxi to gate 2
+var curve = new THREE.SplineCurve3([
+    new THREE.Vector3(-10, .1, 1.7),
+    new THREE.Vector3(-5.45, .1, 1.7),
+    new THREE.Vector3(-4.4,.1, .75),
+    new THREE.Vector3(-4.4, .1, -1.6),
+    new THREE.Vector3(-2.8, .1, -2.1),
+    new THREE.Vector3(2.25, .1, -2.1),
+    new THREE.Vector3(3.1, .1, -1),
+    new THREE.Vector3(3.1, .1, 3),
+    new THREE.Vector3(2.15, .1, 3.7),
+    new THREE.Vector3(-1, .1, 3.7),
+    new THREE.Vector3(-6.9, .1, 3.7),
+    new THREE.Vector3(-7.9, .1, 5),
+    new THREE.Vector3(-7.9, .1, 6),
+    new THREE.Vector3(-7.9, .1, 12)
+]);
+
