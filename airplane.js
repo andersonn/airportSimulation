@@ -1,26 +1,28 @@
 //Handles what an airplane can do.
 
-function Airplane(controlTower){
+function Airplane(controlTower, object, up){
         this.controlTower = controlTower;
-        this.flightPlan = new flightPlan(); //TODO add runway locations
-        this.onGround = true;
+        this.taxi = 0;
+        this.obj=object;
+        this.curve;
+        this.up=up;
+        this.axis = new THREE.Vector3();
     };
     
-    Airplane.prototype.constructor = Airplane;
-    Airplane.prototype.requestTakeOff = function(){
-        if(this.controlTower.requestTakeOff()){
-            //startTakeOff
-        }
-        else{
-            //hold at location
-        }
-    }
+Airplane.prototype.constructor = Airplane;
 
-    Airplane.prototype.requestLanding = function(){
-        if(this.controlTower.requestLanding()){
-            //startLanding
-        }
-        else{
-            //fly another landing pattern
-        }
+Airplane.prototype.setObject(object){
+    this.obj = object;
+}
+
+
+Airplane.prototype.update = function(){
+    if(x<1){
+        this.obj.position.copy(this.curve.getPointAt(x));
+        tangent = curve.getTangentAt(this.taxi).normalize();
+        this.axis.crossVectors(this.up, tangent).normalize();
+        radians = Math.acos(this.up.dot(tangent));
+        this.obj.quaternion.setFromAxisAngle(this.axis, radians);
     }
+    this.taxi +=.001;
+}

@@ -17,6 +17,7 @@ scene.add(runway);
 scene.add(terminalGround);
 var loader = new THREE.ColladaLoader();
 var model = new THREE.Object3D();
+var unusedAirplanes = [];
 var mod = new THREE.Object3D();
 loader.load('b737/model.dae', function(collada){
     model.add(collada.scene);
@@ -41,6 +42,11 @@ loader.load('terminal/model.dae', function(collada){
     scene.add(mod);
 });
 var schedule = new Schedule(5, 96);
+schedule.printArrivals();
+
+arrival = function(){
+    schedule.getArrival();
+}
 
 //Taxi to runway from  gate 7 
 var curve = new THREE.SplineCurve3([
@@ -98,19 +104,23 @@ camera.position.y = 30;
 var controls = new THREE.OrbitControls(camera, renderer.domElement);
 //update the airplanes
 x=0;
+y = 0;
 var up = new THREE.Vector3(0, 0, 1);
 var axis = new THREE.Vector3();
 function render(){
     requestAnimationFrame(render);
     renderer.render(scene, camera);
-    if(x<1){
-        mod.position.copy(curve.getPointAt(x));
-	    tangent = curve.getTangentAt(x).normalize();
-	    axis.crossVectors(up, tangent).normalize();
-	    radians = Math.acos(up.dot(tangent));
-	    mod.quaternion.setFromAxisAngle(axis, radians);
-        //model.rotation.copy(curve.getTangentAt(x).applyAxisAngle(axis, angle));
+    
+    if(schedule.arrivals.length>0){
+        if(schedule.arrivals[0].arrivalTime==y){
+            console.log(schedule.getArrival());
+        }
     }
-    x+=.001;
+    if(schedule.departures.length>0){
+        if(schedule.departures[0].departTime==y){
+            console.log(schedule.getDeparture());
+        } 
+   }
+    y+=.25
 };
 render();
