@@ -1,6 +1,6 @@
 //Schedules planes for the day.
 
-function Schedule(numberOfPlanesToStart, numberOfArrivals){
+function Schedule(numberOfPlanesToStart, numberOfArrivals, controlTower){
         this.arrivals = [];
         this.departures = [];
         this.locations = ["Atlanta", "Austin", "Baltimore", "Burlington", 
@@ -21,30 +21,53 @@ function Schedule(numberOfPlanesToStart, numberOfArrivals){
                           "Toronto", "Tulsa", "Washington DC", "Wichita"];
         this.numberOfPlanesToStart = numberOfPlanesToStart;
         this.numberOfArrivals = numberOfArrivals;
-        this.buildSchedule();        
+	this.controlTower=controlTower;
+	this.loader = new THREE.ColladaLoader();
+	this.models = [];
+	this.loader.load('b737/model.dae', function(collada){
+	    var model = new THREE.Object3D();
+	    model.add(collada.scene);
+	    model.scale.multiplyScalar(0.04);
+	    //model.translateY(.1);
+	    //model.translateX(-10);
+	    //model.translateZ(12);
+	    //scene.add(model);
+	    model.translateX(-.6);
+	    var mod = new THREE.Object3D();
+	    mod.add(model);
+	    for(var i = 0; i<5; i++){
+	    	this.models.push(mod.clone());
+	    }
+	    this.buildSchedule();
+	});
+        
     };
     Schedule.prototype.constructor = Schedule;
     Schedule.prototype.buildSchedule = function(){
         var intervalOfArrival = this.numberOfArrivals/24;
         var time = 0;
+	//Build departures of planes at airport at start of day.
         for(var i = 0; i < this.numberOfPlanesToStart; i++){
             var departTime = time;
             var temp = Math.floor(Math.random()*this.locations.length);
             var city =this.locations[temp];
-            var plane = {departTime: departTime,
-                         city: city
-                        };
+            var plane = new Airplane(this.controlTower);
+	    plane.setDeparture(departTime, city);
+	    plane.setObject(this.models[0]);
+	    this.models.splice(0, 1);
+	    plane.setUp=(new THREE.Vector3(0,0,1));
+	    plane.findGate();
             this.departures.push(plane); 
             time += 5;
         }
         time = 0
+	//Build arrivals for the day.
         for(var i = 0; i < this.numberOfArrivals; i++){
             var arrivalTime = time;
             var temp = Math.floor(Math.random()*this.locations.length);
             var city = this.locations[temp];
-            var plane = {arrivalTime: time,
-                         city: city
-                        };
+            var plane = new Airplane(this.controlTower);
+	    plane.setArrival(time, city);
             this.arrivals.push(plane);
             time+=intervalOfArrival;
         }
@@ -65,9 +88,8 @@ function Schedule(numberOfPlanesToStart, numberOfArrivals){
     Schedule.prototype.setDeparture = function(time){
         var temp = Math.floor(Math.random()*this.locations.length);
         var city = this.locations[temp];
-        var plane = {departTime: time,
-                     city: city
-                    }
+        var plane = new Airplane(this.controlTower);
+	plane.setDeparture(time, city);
         this.departures.push(plane);
     }
 
