@@ -22,7 +22,7 @@ function Schedule(numberOfPlanesToStart, numberOfArrivals, controlTower){
         this.numberOfPlanesToStart = numberOfPlanesToStart;
         this.numberOfArrivals = numberOfArrivals;
 	this.controlTower=controlTower;
-	this.loader = new THREE.ColladaLoader();
+/*	this.loader = new THREE.ColladaLoader();
 	this.models = [];
 	this.loader.load('b737/model.dae', function(collada){
 	    var model = new THREE.Object3D();
@@ -39,7 +39,7 @@ function Schedule(numberOfPlanesToStart, numberOfArrivals, controlTower){
 	    	this.models.push(mod.clone());
 	    }
 	    this.buildSchedule();
-	});
+	});*/
         
     };
     Schedule.prototype.constructor = Schedule;
@@ -53,8 +53,8 @@ function Schedule(numberOfPlanesToStart, numberOfArrivals, controlTower){
             var city =this.locations[temp];
             var plane = new Airplane(this.controlTower);
 	    plane.setDeparture(departTime, city);
-	    plane.setObject(this.models[0]);
-	    this.models.splice(0, 1);
+	    //plane.setObject(this.models[0]);
+	    //this.models.splice(0, 1);
 	    plane.setUp=(new THREE.Vector3(0,0,1));
 	    plane.findGate();
             this.departures.push(plane); 

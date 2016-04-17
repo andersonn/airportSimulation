@@ -7,6 +7,8 @@ var image = new THREE.TextureLoader().load("airport.jpg");
 var material = new THREE.MeshLambertMaterial({map : image});
 var runway = new THREE.Mesh(geometry, material);
 
+var object = new Objects();
+object.loadB737();
 var geometry2 = new THREE.BoxGeometry(40, 0.1, 10);
 var image2 = new THREE.TextureLoader().load("asphalt.jpg");
 var material2 = new THREE.MeshLambertMaterial({map : image2});
