@@ -1,6 +1,6 @@
 //Handle setting up the simulation
-var departures =[];
-var planesToStart = 1;
+var  planes=[];
+var planesToStart = 5;
 //create the scene
 var scene = new THREE.Scene();
 var geometry = new THREE.BoxGeometry(40,0.1, 20);
@@ -20,7 +20,6 @@ scene.add(runway);
 scene.add(terminalGround);
 var loader = new THREE.ColladaLoader();
 var model = new THREE.Object3D();
-var unusedAirplanes = [];
 var mod = new THREE.Object3D();
 /*loader.load('b737/model.dae', function(collada){
     model.add(collada.scene);
@@ -45,9 +44,8 @@ loader.load('terminal/model.dae', function(collada){
     scene.add(mod);
 });
 var controlTower=new ControlTower();
-var schedule = new Schedule(planesToStart, 96, controlTower);
-schedule.printArrivals();
-
+var schedule = new Schedule(planesToStart, 7, controlTower);
+schedule.printDepartures();
 
 /*//Taxi to runway from  gate 7 
 var curve = new THREE.SplineCurve3([
@@ -108,6 +106,23 @@ x=0;
 var worldTime = -.25;
 var up = new THREE.Vector3(0, 0, 1);
 var axis = new THREE.Vector3();
+
+
+//Airplanes that are done moving.
+function removeFinished(){
+   var i = 0;
+   while(i < planes.length){ 
+    if(planes[i].finished){
+	var temp = planes[i].removeObject();
+	object.addB737(temp);
+	scene.remove(temp);
+	planes.splice(i, 1);
+	i = i -1;
+    }
+    i++;
+  }
+}
+
 function render(){
     requestAnimationFrame(render);
     renderer.render(scene, camera);
@@ -123,7 +138,7 @@ function render(){
                 scene.add(temp);
                 plane.departOnly();
                 plane.update(0);
-                departures.push(plane);
+                planes.push(plane);
             }           
         }
         if(schedule.departures.length>0){
@@ -131,11 +146,26 @@ function render(){
         }
     }
     //TODO Place regular arrivals and departures
+    if(schedule.arrivals[0]!=undefined){
+    if(worldTime >= schedule.arrivals[0].arrivalTime){
+	var temp = new THREE.Object3D();
+	temp = object.getB737();
+	if(temp!=null){
+	   var plane = schedule.getArrival();
+	   plane.setObject(temp);
+	   plane.setUp(up);
+	   scene.add(temp);
+           planes.push(plane);
+	}
+    }
+    }
     if(worldTime>=0){
-        for(var i = 0; i<departures.length; i++){
-            departures[i].update(worldTime);
+        for(var i = 0; i<planes.length; i++){
+            planes[i].update(worldTime);
         }
-    }    
+    }
+
+    removeFinished();    
     worldTime+=.25;
 };
 render();

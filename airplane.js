@@ -1,7 +1,8 @@
 //Handles what an airplane can do.
 
-function Airplane(controlTower){
+function Airplane(controlTower, schedule){
     this.controlTower = controlTower;
+    this.schedule = schedule;
     this.move = 0;
     this.obj;
     this.up;
@@ -19,10 +20,10 @@ function Airplane(controlTower){
             new THREE.Vector3(80, 40, -9)
     ]);
     this.curve = this.land;
-	this.taxiToGate;
-	this.taxiToRunway;
+    this.taxiToGate;
+    this.taxiToRunway;
     this.path = 0;
-    this.curve;
+    this.gate = null;
     this.delta = .01;
     this.finished = false;
 };
@@ -44,11 +45,16 @@ Airplane.prototype.findGate=function(){
 	  //flyby?
 	}
 	else{
+		this.gate = taxi.number;
 		this.taxiToGate = taxi.gate;
 		this.taxiToRunway=taxi.runway;
 	}
 }
 
+Airplane.prototype.freeGate = function(){
+	this.controlTower.freeGate(this.gate);	
+	this.gate = null;
+}
 Airplane.prototype.setDeparture=function(time, city){
 	this.departureTime=time;
 	this.goingTo=city;
@@ -56,6 +62,12 @@ Airplane.prototype.setDeparture=function(time, city){
 
 Airplane.prototype.getObject=function(){
 	return this.obj;
+}
+
+Airplane.prototype.removeObject = function(){
+	temp = this.obj;
+	this.obj=null;
+	return temp;
 }
 
 Airplane.prototype.setObject=function(object){
@@ -72,15 +84,14 @@ Airplane.prototype.pathSet=function(){
         case 1:
             this.curve = this.taxiToGate;
             this.move = 0;
-            this.delta = .001;
+            this.delta = .007;
             break;
         case 2:
             this.curve = this.taxiToRunway;
             this.move = 0;
-            this.delta = .001;
+            this.delta = .007;
             break;
         case 3:
-            console.log('Takeoff');
             this.curve = this.takeOff;
             this.move = 0;
             this.delta = .01;
@@ -96,40 +107,46 @@ Airplane.prototype.pathSet=function(){
 Airplane.prototype.departOnly = function(){
     this.path = 2;
     this.pathSet();
+    this.movement();
+}
+Airplane.prototype.movement = function(){
+	if(this.move<1){
+            this.obj.position.copy(this.curve.getPointAt(this.move));
+            tangent = this.curve.getTangentAt(this.move).normalize();
+            this.axis.crossVectors(this.up, tangent).normalize();
+            radians = Math.acos(this.up.dot(tangent));
+            this.obj.quaternion.setFromAxisAngle(this.axis, radians);
+        }
+        this.move +=this.delta;
 }
 
 Airplane.prototype.update = function(worldTime){
     if((this.arrivalTime <= worldTime && this.path==0)||
       (this.arrivalTime <= worldTime && this.path==1)){
-        if(this.move<1){
-            this.obj.position.copy(this.curve.getPointAt(this.move));
-            tangent = this.taxiToRunway.getTangentAt(this.move).normalize();
-            this.axis.crossVectors(this.up, tangent).normalize();
-            radians = Math.acos(this.up.dot(tangent));
-            this.obj.quaternion.setFromAxisAngle(this.axis, radians);
-        }
-        
-        this.move +=this.delta;
+    	this.movement();
     }
     else if((this.departureTime <= worldTime && this.path==2)||
            (this.departureTime <= worldTime && this.path==3)){
-
-        if(this.move<1){
-            this.obj.position.copy(this.curve.getPointAt(this.move));
-            tangent = this.taxiToRunway.getTangentAt(this.move).normalize();
-            this.axis.crossVectors(this.up, tangent).normalize();
-            radians = Math.acos(this.up.dot(tangent));
-            this.obj.quaternion.setFromAxisAngle(this.axis, radians);
-        }
-     
-        this.move +=this.delta;
+	//Free gate as you move away from the gate.
+	if(this.gate != null){
+		this.freeGate();
+	}
+	this.movement();
     }
     else{
         //do nothing.
     }
     if(this.move >= 1 && !this.finished){
-        this.path+=1
-        console.log(this.path);
+        if(this.path == 1){
+	   console.log('setting depart time');
+	   this.departureTime = worldTime + 4;
+	   this.goingTo=this.schedule.getCity();
+	   console.log(this.departureTime);
+	}
+	if(this.path == 0){
+	  this.findGate();
+	}
+	this.path+=1;
         this.pathSet();
     }
 }
