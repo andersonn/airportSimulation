@@ -21,26 +21,8 @@ function Schedule(numberOfPlanesToStart, numberOfArrivals, controlTower){
                           "Toronto", "Tulsa", "Washington DC", "Wichita"];
         this.numberOfPlanesToStart = numberOfPlanesToStart;
         this.numberOfArrivals = numberOfArrivals;
-	this.controlTower=controlTower;
-/*	this.loader = new THREE.ColladaLoader();
-	this.models = [];
-	this.loader.load('b737/model.dae', function(collada){
-	    var model = new THREE.Object3D();
-	    model.add(collada.scene);
-	    model.scale.multiplyScalar(0.04);
-	    //model.translateY(.1);
-	    //model.translateX(-10);
-	    //model.translateZ(12);
-	    //scene.add(model);
-	    model.translateX(-.6);
-	    var mod = new THREE.Object3D();
-	    mod.add(model);
-	    for(var i = 0; i<5; i++){
-	    	this.models.push(mod.clone());
-	    }
+	    this.controlTower=controlTower;
 	    this.buildSchedule();
-	});*/
-        
     };
     Schedule.prototype.constructor = Schedule;
     Schedule.prototype.buildSchedule = function(){
@@ -52,11 +34,8 @@ function Schedule(numberOfPlanesToStart, numberOfArrivals, controlTower){
             var temp = Math.floor(Math.random()*this.locations.length);
             var city =this.locations[temp];
             var plane = new Airplane(this.controlTower);
-	    plane.setDeparture(departTime, city);
-	    //plane.setObject(this.models[0]);
-	    //this.models.splice(0, 1);
-	    plane.setUp=(new THREE.Vector3(0,0,1));
-	    plane.findGate();
+	        plane.setDeparture(departTime, city);
+	        plane.findGate();
             this.departures.push(plane); 
             time += 5;
         }
@@ -67,7 +46,7 @@ function Schedule(numberOfPlanesToStart, numberOfArrivals, controlTower){
             var temp = Math.floor(Math.random()*this.locations.length);
             var city = this.locations[temp];
             var plane = new Airplane(this.controlTower);
-	    plane.setArrival(time, city);
+	        plane.setArrival(time, city);
             this.arrivals.push(plane);
             time+=intervalOfArrival;
         }
@@ -89,7 +68,7 @@ function Schedule(numberOfPlanesToStart, numberOfArrivals, controlTower){
         var temp = Math.floor(Math.random()*this.locations.length);
         var city = this.locations[temp];
         var plane = new Airplane(this.controlTower);
-	plane.setDeparture(time, city);
+	    plane.setDeparture(time, city);
         this.departures.push(plane);
     }
 

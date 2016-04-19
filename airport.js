@@ -1,5 +1,6 @@
 //Handle setting up the simulation
 var departures =[];
+var planesToStart = 1;
 //create the scene
 var scene = new THREE.Scene();
 var geometry = new THREE.BoxGeometry(40,0.1, 20);
@@ -44,7 +45,7 @@ loader.load('terminal/model.dae', function(collada){
     scene.add(mod);
 });
 var controlTower=new ControlTower();
-var schedule = new Schedule(5, 96, controlTower);
+var schedule = new Schedule(planesToStart, 96, controlTower);
 schedule.printArrivals();
 
 
@@ -104,35 +105,37 @@ camera.position.y = 30;
 var controls = new THREE.OrbitControls(camera, renderer.domElement);
 //update the airplanes
 x=0;
-y = 0;
+var worldTime = -.25;
 var up = new THREE.Vector3(0, 0, 1);
 var axis = new THREE.Vector3();
 function render(){
     requestAnimationFrame(render);
     renderer.render(scene, camera);
-    
-    if(schedule.arrivals.length>0){
-        if(schedule.arrivals[0].arrivalTime==y){
-            console.log(schedule.getArrival());
-	    //TODO scene.add();
+    //TODO Place starting departure planes.
+    if(worldTime==-0.25){
+        for(var i = 0; i<schedule.departures.length; i++){
+            var temp = new THREE.Object3D();
+            temp = object.getB737();
+            if(temp != null){
+                var plane = schedule.getDeparture();
+                plane.setObject(temp);
+                plane.setUp(up);
+                scene.add(temp);
+                plane.departOnly();
+                plane.update(0);
+                departures.push(plane);
+            }           
+        }
+        if(schedule.departures.length>0){
+            worldTime = -.5;
         }
     }
-    if(schedule.departures.length>0){
-	//starting departures
-	if(y==0){
-		while(schedule.departures.length>0){
-			var temp = schedule.getDeparture();
-			scene.add(temp.obj);
-			departures.push(temp);
-		}
-	}
-        if(schedule.departures[0].departTime==y){
-           departures.push(schedule.getDeparture());
-        } 
-   }
-   for(var i =0; i<departures.length; i++){
-	departures[i].update();
-   }		
-    y+=.25
+    //TODO Place regular arrivals and departures
+    if(worldTime>=0){
+        for(var i = 0; i<departures.length; i++){
+            departures[i].update(worldTime);
+        }
+    }    
+    worldTime+=.25;
 };
 render();
