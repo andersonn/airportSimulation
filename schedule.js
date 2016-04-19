@@ -31,9 +31,8 @@ function Schedule(numberOfPlanesToStart, numberOfArrivals, controlTower){
 	//Build departures of planes at airport at start of day.
         for(var i = 0; i < this.numberOfPlanesToStart; i++){
             var departTime = time;
-            var temp = Math.floor(Math.random()*this.locations.length);
-            var city =this.locations[temp];
-            var plane = new Airplane(this.controlTower);
+            var city = this.getCity();
+            var plane = new Airplane(this.controlTower, this);
 	        plane.setDeparture(departTime, city);
 	        plane.findGate();
             this.departures.push(plane); 
@@ -43,15 +42,19 @@ function Schedule(numberOfPlanesToStart, numberOfArrivals, controlTower){
 	//Build arrivals for the day.
         for(var i = 0; i < this.numberOfArrivals; i++){
             var arrivalTime = time;
-            var temp = Math.floor(Math.random()*this.locations.length);
-            var city = this.locations[temp];
-            var plane = new Airplane(this.controlTower);
+            var city = this.getCity();
+            var plane = new Airplane(this.controlTower, this);
 	        plane.setArrival(time, city);
             this.arrivals.push(plane);
-            time+=intervalOfArrival;
+            //time+=intervalOfArrival;
+	    time += 5;
         }
     }
-    
+    Schedule.prototype.getCity = function(){
+	var temp = Math.floor(Math.random()*this.locations.length);
+	return this.locations[temp];
+
+    }    
     Schedule.prototype.getArrival = function(){
         var temp = this.arrivals[0];
         this.arrivals.shift();
@@ -67,7 +70,7 @@ function Schedule(numberOfPlanesToStart, numberOfArrivals, controlTower){
     Schedule.prototype.setDeparture = function(time){
         var temp = Math.floor(Math.random()*this.locations.length);
         var city = this.locations[temp];
-        var plane = new Airplane(this.controlTower);
+        var plane = new Airplane(this.controlTower, this);
 	    plane.setDeparture(time, city);
         this.departures.push(plane);
     }

@@ -33,7 +33,7 @@ Objects.prototype.getB737 = function(){
     }
     return null;
 }
-    
 
-
-
+Objects.prototype.addB737 = function(object){
+    this.b737.push(object);
+}

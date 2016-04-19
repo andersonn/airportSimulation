@@ -293,10 +293,12 @@ function ControlTower(){
 ControlTower.prototype.constructor = ControlTower;
 
 ControlTower.prototype.findGate = function(){
-	var data = {gate : null,
+	var data = {number: null,
+		    gate : null,
 		    runway : null};
 	for(var i = 0; i<this.openGates.length; i++){
 		if(this.openGates[i]){
+			data.number = i;
 			data.gate=this.toGates[i];
 			data.runway=this.toRunway[i];
 			this.openGates[i]=false;
@@ -307,4 +309,8 @@ ControlTower.prototype.findGate = function(){
 		
 	}
 	return data;
+}
+
+ControlTower.prototype.freeGate = function(gate){
+	this.openGates[gate]=true;
 }
