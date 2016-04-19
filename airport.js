@@ -1,6 +1,7 @@
 //Handle setting up the simulation
 var  planes=[];
 var planesToStart = 5;
+var numberOfPlanes = 98;
 //create the scene
 var scene = new THREE.Scene();
 var geometry = new THREE.BoxGeometry(40,0.1, 20);
@@ -44,7 +45,7 @@ loader.load('terminal/model.dae', function(collada){
     scene.add(mod);
 });
 var controlTower=new ControlTower();
-var schedule = new Schedule(planesToStart, 7, controlTower);
+var schedule = new Schedule(planesToStart, numberOfPlanes, controlTower);
 schedule.printDepartures();
 
 /*//Taxi to runway from  gate 7 
@@ -147,17 +148,19 @@ function render(){
     }
     //TODO Place regular arrivals and departures
     if(schedule.arrivals[0]!=undefined){
-    if(worldTime >= schedule.arrivals[0].arrivalTime){
-	var temp = new THREE.Object3D();
-	temp = object.getB737();
-	if(temp!=null){
-	   var plane = schedule.getArrival();
-	   plane.setObject(temp);
-	   plane.setUp(up);
-	   scene.add(temp);
-           planes.push(plane);
-	}
-    }
+        if(controlTower.hasOpenGates()){
+            if(worldTime >= schedule.arrivals[0].arrivalTime){
+            var temp = new THREE.Object3D();
+            temp = object.getB737();
+                if(temp!=null){
+                   var plane = schedule.getArrival();
+                   plane.setObject(temp);
+                   plane.setUp(up);
+                   scene.add(temp);
+                   planes.push(plane);
+                }
+            }
+        }
     }
     if(worldTime>=0){
         for(var i = 0; i<planes.length; i++){
