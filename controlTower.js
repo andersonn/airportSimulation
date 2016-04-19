@@ -314,3 +314,13 @@ ControlTower.prototype.findGate = function(){
 ControlTower.prototype.freeGate = function(gate){
 	this.openGates[gate]=true;
 }
+
+ControlTower.prototype.hasOpenGates = function(){
+    var open = false;
+    for(var i = 0; i<this.openGates.length; i++){
+        if(this.openGates[i]){
+            open = true;
+        }
+    }
+    return open;
+}

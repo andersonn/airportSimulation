@@ -117,13 +117,18 @@ Airplane.prototype.movement = function(){
             radians = Math.acos(this.up.dot(tangent));
             this.obj.quaternion.setFromAxisAngle(this.axis, radians);
         }
-        this.move +=this.delta;
+     this.move +=this.delta;
 }
 
 Airplane.prototype.update = function(worldTime){
     if((this.arrivalTime <= worldTime && this.path==0)||
       (this.arrivalTime <= worldTime && this.path==1)){
-    	this.movement();
+    	if(this.gate == null){
+            this.findGate();
+        }
+        if(this.gate!=null){
+            this.movement();
+        }
     }
     else if((this.departureTime <= worldTime && this.path==2)||
            (this.departureTime <= worldTime && this.path==3)){
@@ -138,15 +143,12 @@ Airplane.prototype.update = function(worldTime){
     }
     if(this.move >= 1 && !this.finished){
         if(this.path == 1){
-	   console.log('setting depart time');
-	   this.departureTime = worldTime + 4;
-	   this.goingTo=this.schedule.getCity();
-	   console.log(this.departureTime);
-	}
-	if(this.path == 0){
-	  this.findGate();
-	}
-	this.path+=1;
+	        console.log('setting depart time');
+	        this.departureTime = worldTime + 4;
+	        this.goingTo=this.schedule.getCity();
+	        console.log(this.departureTime);
+	    }
+	    this.path+=1;
         this.pathSet();
     }
 }
