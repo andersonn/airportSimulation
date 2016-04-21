@@ -124,6 +124,7 @@ function removeFinished(){
   }
 }
 
+
 function render(){
     requestAnimationFrame(render);
     renderer.render(scene, camera);
@@ -164,7 +165,25 @@ function render(){
     }
     if(worldTime>=0){
         for(var i = 0; i<planes.length; i++){
-            planes[i].update(worldTime);
+            var canMove = true;
+            for(var j = i+1; j<planes.length; j++){
+               var v = planes[i].getDirection();
+                //console.log(v);
+               if(v != null){
+                var x = new THREE.Vector3();
+                x.subVectors(planes[j].obj.position, planes[i].obj.position); 
+                //console.log(x);
+                var theta = v.angleTo(x);
+                var threshHold = (v.length()*Math.cos(theta))/x.length();
+                console.log(threshHold);
+                if(threshHold>=1/8){
+                    canMove = false;
+                }
+             }
+            }
+            if(canMove){
+                planes[i].update(worldTime);
+            }
         }
     }
 

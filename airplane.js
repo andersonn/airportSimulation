@@ -26,6 +26,7 @@ function Airplane(controlTower, schedule){
     this.gate = null;
     this.delta = .01;
     this.finished = false;
+    this.previousPosition=new THREE.Vector3();
 };
     
 Airplane.prototype.constructor = Airplane;
@@ -109,8 +110,19 @@ Airplane.prototype.departOnly = function(){
     this.pathSet();
     this.movement();
 }
+
+Airplane.prototype.getDirection = function(){
+    var direction = new THREE.Vector3();
+    if(this.previousPosition != null){
+        direction.subVectors(this.obj.position, this.previousPosition);
+        return direction;
+    }
+    return null;
+}
+
 Airplane.prototype.movement = function(){
 	if(this.move<1){
+            this.previousPosition.copy(this.obj.position);
             this.obj.position.copy(this.curve.getPointAt(this.move));
             tangent = this.curve.getTangentAt(this.move).normalize();
             this.axis.crossVectors(this.up, tangent).normalize();
