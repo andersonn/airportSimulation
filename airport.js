@@ -44,6 +44,15 @@ loader.load('terminal/model.dae', function(collada){
     mod.translateZ(20);
     scene.add(mod);
 });
+var tower = new THREE.Object3D();
+loader.load('control/model.dae', function(collada){
+    tower.add(collada.scene);
+    tower.scale.multiplyScalar(.2);
+    tower.translateY(1.5);
+    tower.translateX(-6.5);
+    tower.translateZ(-4);
+    scene.add(tower);
+});
 var controlTower=new ControlTower();
 var schedule = new Schedule(planesToStart, numberOfPlanes, controlTower);
 schedule.printDepartures();
