@@ -110,6 +110,14 @@ var camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeigh
 
 camera.position.y = 30;
 //camera.position.z = 3;
+var towerCamera = new THREE.PerspectiveCamera(90, window.innerWidth/window.innerHeight, .1, 2000);
+var towerCameraObject = new THREE.Object3D();
+towerCamera.position.x = 1;
+towerCameraObject.add(towerCamera);
+towerCameraObject.position.x = -6.5;
+towerCameraObject.position.z = -4;
+towerCameraObject.position.y = 3;
+scene.add(towerCameraObject);
 var controls = new THREE.OrbitControls(camera, renderer.domElement);
 //update the airplanes
 x=0;
@@ -132,12 +140,44 @@ function removeFinished(){
     i++;
   }
 }
+var towerCameraActive = false;
 
+function keydown(event){
+    switch (event.keyCode){
+    
+    case 49:
+        towerCameraActive = true;
+        break;
+    case 50:
+        towerCameraActive = false;
+        break;
+    case 39:
+        //rotate right
+        towerCameraObject.rotateY(-.2);
+        break;
+    case 38:
+        //rotate up
+        towerCamera.rotateX(.2);
+        break;
+    case 40:
+        towerCamera.rotateX(-.2);
+        //rotate down
+        break;
+    case 37:
+        towerCameraObject.rotateY(.2);
+        //rotate left
+        break;
+    }
+}
 
+window.addEventListener('keydown', keydown);
 function render(){
     requestAnimationFrame(render);
-    renderer.render(scene, camera);
-    //TODO Place starting departure planes.
+    if(towerCameraActive)
+        renderer.render(scene, towerCamera);
+    else
+        renderer.render(scene, camera);
+    
     if(worldTime==-0.25){
         for(var i = 0; i<schedule.departures.length; i++){
             var temp = new THREE.Object3D();
