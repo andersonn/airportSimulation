@@ -16,7 +16,7 @@ Objects.prototype.loadB737 = function(){
         model.translateX(-.6);
         var mod = new THREE.Object3D();
         mod.add(model);
-        for(var i = 0; i<100; i++){
+        for(var i = 0; i<20; i++){
             this.b737.push(mod.clone());
         }
 

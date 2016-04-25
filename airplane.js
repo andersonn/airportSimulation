@@ -12,12 +12,12 @@ function Airplane(controlTower, schedule){
 	this.goingTo;
 	this.departureTime;
     this.land = new THREE.SplineCurve3([
-            new THREE.Vector3(-80, 40, 1.7),
+            new THREE.Vector3(-161, 40, 1.7),
             new THREE.Vector3(-10, .1, 1.7)
     ]);
     this.takeOff = new THREE.SplineCurve3([
             new THREE.Vector3(3.5, .1, -9),
-            new THREE.Vector3(80, 40, -9)
+            new THREE.Vector3(144.5, 40, -9)
     ]);
     this.curve = this.land;
     this.taxiToGate;
@@ -128,6 +128,12 @@ Airplane.prototype.movement = function(){
             this.axis.crossVectors(this.up, tangent).normalize();
             radians = Math.acos(this.up.dot(tangent));
             this.obj.quaternion.setFromAxisAngle(this.axis, radians);
+            if(this.path==0){
+                this.obj.rotateZ(-Math.PI/8);
+            }
+            if(this.path==3){
+                this.obj.rotateZ(Math.PI/8);
+            }
         }
      this.move +=this.delta;
 }
@@ -156,7 +162,7 @@ Airplane.prototype.update = function(worldTime){
     if(this.move >= 1 && !this.finished){
         if(this.path == 1){
 	        console.log('setting depart time');
-	        this.departureTime = worldTime + 4;
+	        this.departureTime = worldTime + 5;
 	        this.goingTo=this.schedule.getCity();
 	        console.log(this.departureTime);
 	    }

@@ -17,22 +17,30 @@ var material2 = new THREE.MeshLambertMaterial({map : image2});
 var terminalGround = new THREE.Mesh(geometry2, material2);
 terminalGround.translateZ(15);
 
+//Add the grounds
+var groundLeft = new THREE.BoxGeometry(100, .1, 200);
+var groundMaterial = new THREE.MeshLambertMaterial({color : 0x3e9f03});
+var left = new THREE.Mesh(groundLeft, groundMaterial);
+left.translateZ(5);
+var right = left.clone(); 
+left.translateX(-70);
+right.translateX(70);
+var groundTop = new THREE.BoxGeometry(40, .1, 85); 
+var gTop = new THREE.Mesh(groundTop, groundMaterial);
+var gBottom = gTop.clone();
+gTop.translateZ(-52.5);
+gBottom.translateZ(62.5);
+scene.add(gBottom);
+scene.add(gTop);
+scene.add(right);
+scene.add(left);
 scene.add(runway);
 scene.add(terminalGround);
+
+
 var loader = new THREE.ColladaLoader();
 var model = new THREE.Object3D();
 var mod = new THREE.Object3D();
-/*loader.load('b737/model.dae', function(collada){
-    model.add(collada.scene);
-    model.scale.multiplyScalar(0.04);
-    //model.translateY(.1);
-    //model.translateX(-10);
-    //model.translateZ(12);
-    //scene.add(model);
-    model.translateX(-.6);
-    mod.add(model);
-});
-scene.add(mod);*/
 var terminal = new THREE.Object3D();
 loader.load('terminal/model.dae', function(collada){
     terminal.add(collada.scene);
@@ -57,44 +65,6 @@ var controlTower=new ControlTower();
 var schedule = new Schedule(planesToStart, numberOfPlanes, controlTower);
 schedule.printDepartures();
 
-/*//Taxi to runway from  gate 7 
-var curve = new THREE.SplineCurve3([
-    new THREE.Vector3(11.3, .1, 12),
-    new THREE.Vector3(11.3, .1, 7),
-    new THREE.Vector3(11.3, .1, 8),
-    new THREE.Vector3(11.6, .1, 8.8),
-    new THREE.Vector3(12.4, .1, 9),
-    new THREE.Vector3(13.8, .1, 9),
-    new THREE.Vector3(15.4, .1, 9),
-    new THREE.Vector3(17, .1, 9),
-    new THREE.Vector3(18, .1, 9),
-    new THREE.Vector3(18.8, .1, 8.2),
-    new THREE.Vector3(19, .1, 7.2),
-    new THREE.Vector3(19, .1, 0),
-    new THREE.Vector3(19, .1, -4.5),
-    new THREE.Vector3(18, .1, -5.3),
-    new THREE.Vector3(14, .1, -5.3),
-    new THREE.Vector3(7, .1, -5.3),
-    new THREE.Vector3(0, .1, -5.3),
-    new THREE.Vector3(-3.4, .1, -5.3),
-    new THREE.Vector3(-4.4, .1, -6),
-    new THREE.Vector3(-4.4, .1, -7),
-    new THREE.Vector3(-4.4, .1, -8),
-    new THREE.Vector3(-3.4, .1, -9),
-    new THREE.Vector3(-2, .1, -9),
-    new THREE.Vector3(3.5, .1, -9)
-]);
-   
-
-var curveGeom = new THREE.Geometry();
-curveGeom.vertices = curve.getPoints(1000);
-var curveMaterial = new THREE.LineBasicMaterial({color : 0xff0000
-						 //transparent: true,
-						 //opacity: 0.0
-						});
-var splineObject = new THREE.Line(curveGeom, curveMaterial);
-scene.add(splineObject);*/
-//console.log(curve.getPointAt(0));
 //lighting
 scene.add(new THREE.AmbientLight(0xffffff));
 var light1 = new THREE.DirectionalLight(0xaaaaaa);
@@ -177,7 +147,7 @@ function render(){
         renderer.render(scene, towerCamera);
     else
         renderer.render(scene, camera);
-    
+    //Handle the planes that are there at the start of the day.
     if(worldTime==-0.25){
         for(var i = 0; i<schedule.departures.length; i++){
             var temp = new THREE.Object3D();
@@ -196,7 +166,7 @@ function render(){
             worldTime = -.5;
         }
     }
-    //TODO Place regular arrivals and departures
+    //Place regular arrivals and departures
     if(schedule.arrivals[0]!=undefined){
         if(controlTower.hasOpenGates()){
             if(worldTime >= schedule.arrivals[0].arrivalTime){
@@ -212,6 +182,8 @@ function render(){
             }
         }
     }
+    
+    //Move planes.
     if(worldTime>=0){
         for(var i = 0; i<planes.length; i++){
             var canMove = true;

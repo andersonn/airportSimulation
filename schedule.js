@@ -47,7 +47,7 @@ function Schedule(numberOfPlanesToStart, numberOfArrivals, controlTower){
 	        plane.setArrival(time, city);
             this.arrivals.push(plane);
             //time+=intervalOfArrival;
-	    time += 5;
+	        time += 9;
         }
     }
     Schedule.prototype.getCity = function(){
