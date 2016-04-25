@@ -153,18 +153,22 @@ function keydown(event){
         break;
     case 39:
         //rotate right
-        towerCameraObject.rotateY(-.2);
+	if(towerCameraActive)
+          towerCameraObject.rotateY(-.2);
         break;
     case 38:
         //rotate up
-        towerCamera.rotateX(.2);
+	if(towerCameraActive)
+          towerCamera.rotateX(.2);
         break;
     case 40:
-        towerCamera.rotateX(-.2);
+	if(towerCameraActive)
+          towerCamera.rotateX(-.2);
         //rotate down
         break;
     case 37:
-        towerCameraObject.rotateY(.2);
+	if(towerCameraActive)
+          towerCameraObject.rotateY(.2);
         //rotate left
         break;
     }
