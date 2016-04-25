@@ -10,7 +10,7 @@ var material = new THREE.MeshLambertMaterial({map : image});
 var runway = new THREE.Mesh(geometry, material);
 
 var object = new Objects();
-object.loadB737();
+object.load();
 var geometry2 = new THREE.BoxGeometry(40, 0.1, 10);
 var image2 = new THREE.TextureLoader().load("asphalt.jpg");
 var material2 = new THREE.MeshLambertMaterial({map : image2});
@@ -82,7 +82,7 @@ camera.position.y = 30;
 //camera.position.z = 3;
 var towerCamera = new THREE.PerspectiveCamera(90, window.innerWidth/window.innerHeight, .1, 2000);
 var towerCameraObject = new THREE.Object3D();
-towerCamera.position.x = 1;
+//towerCamera.position.x = 1;
 towerCameraObject.add(towerCamera);
 towerCameraObject.position.x = -6.5;
 towerCameraObject.position.z = -4;
@@ -102,8 +102,8 @@ function removeFinished(){
    while(i < planes.length){ 
     if(planes[i].finished){
 	var temp = planes[i].removeObject();
-	object.addB737(temp);
-	scene.remove(temp);
+	object.addPlane(temp);
+	scene.remove(temp.object);
 	planes.splice(i, 1);
 	i = i -1;
     }
@@ -117,9 +117,11 @@ function keydown(event){
     
     case 49:
         towerCameraActive = true;
+        scene.remove(tower);
         break;
     case 50:
         towerCameraActive = false;
+        scene.add(tower);
         break;
     case 39:
         //rotate right
@@ -154,13 +156,13 @@ function render(){
     //Handle the planes that are there at the start of the day.
     if(worldTime==-0.25){
         for(var i = 0; i<schedule.departures.length; i++){
-            var temp = new THREE.Object3D();
-            temp = object.getB737();
+            var temp = object.getObject();
             if(temp != null){
                 var plane = schedule.getDeparture();
-                plane.setObject(temp);
-                plane.setUp(up);
-                scene.add(temp);
+                plane.setObject(temp.object);
+                plane.setUp(temp.up);
+                plane.setType(temp.type);
+                scene.add(temp.object);
                 plane.departOnly();
                 plane.update(0);
                 planes.push(plane);
@@ -175,12 +177,13 @@ function render(){
         if(controlTower.hasOpenGates()){
             if(worldTime >= schedule.arrivals[0].arrivalTime){
             var temp = new THREE.Object3D();
-            temp = object.getB737();
+            temp = object.getObject();
                 if(temp!=null){
                    var plane = schedule.getArrival();
-                   plane.setObject(temp);
-                   plane.setUp(up);
-                   scene.add(temp);
+                   plane.setObject(temp.object);
+                   plane.setUp(temp.up);
+                   plane.setType(temp.type);
+                   scene.add(temp.object);
                    planes.push(plane);
                 }
             }
@@ -191,20 +194,20 @@ function render(){
     if(worldTime>=0){
         for(var i = 0; i<planes.length; i++){
             var canMove = true;
-            for(var j = i+1; j<planes.length; j++){
-               var v = planes[i].getDirection();
-                //console.log(v);
-               if(v != null){
-                var x = new THREE.Vector3();
-                x.subVectors(planes[j].obj.position, planes[i].obj.position); 
-                //console.log(x);
-                var theta = v.angleTo(x);
-                var threshHold = (v.length()*Math.cos(theta))/x.length();
-                console.log(threshHold);
-                if(threshHold>=1/8){
-                    canMove = false;
+            if(!planes[i].flying){
+                for(var j = i+1; j<planes.length; j++){
+                   var v = planes[i].getDirection();
+                   if(v != null){
+                    var x = new THREE.Vector3();
+                    x.subVectors(planes[j].obj.position, planes[i].obj.position); 
+                    var theta = v.angleTo(x);
+                    var threshHold = (v.length()*Math.cos(theta))/x.length();
+                    if(threshHold>=1/8){
+                        canMove = false;
+                    }
+                    //Define runway positions to hold if needed.
+                 }
                 }
-             }
             }
             if(canMove){
                 planes[i].update(worldTime);

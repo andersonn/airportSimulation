@@ -6,6 +6,7 @@ function Airplane(controlTower, schedule){
     this.move = 0;
     this.obj;
     this.up;
+    this.type;
     this.axis = new THREE.Vector3();
     this.arrivalTime;
 	this.comingFrom;
@@ -26,6 +27,8 @@ function Airplane(controlTower, schedule){
     this.gate = null;
     this.delta = .01;
     this.finished = false;
+    this.flying = true;
+    this.onRunway = false;
     this.previousPosition=new THREE.Vector3();
 };
     
@@ -39,7 +42,9 @@ Airplane.prototype.setArrival=function(time, city){
 Airplane.prototype.setUp=function(up){
 	this.up = up;
 }
-
+Airplane.prototype.setType = function(type){
+    this.type = type;
+}
 Airplane.prototype.findGate=function(){
 	var taxi = this.controlTower.findGate();
 	if(taxi.gate == null){
@@ -66,9 +71,13 @@ Airplane.prototype.getObject=function(){
 }
 
 Airplane.prototype.removeObject = function(){
-	temp = this.obj;
+	var message ={
+                type : this.type,
+                object : this.obj
+    };
 	this.obj=null;
-	return temp;
+	this.type = null;
+    return message;
 }
 
 Airplane.prototype.setObject=function(object){
@@ -85,15 +94,19 @@ Airplane.prototype.pathSet=function(){
         case 1:
             this.curve = this.taxiToGate;
             this.move = 0;
+            this.flying = false;
             this.delta = .007;
             break;
         case 2:
             this.curve = this.taxiToRunway;
             this.move = 0;
+            this.flying = false;
             this.delta = .007;
             break;
         case 3:
             this.curve = this.takeOff;
+            this.flying = true;
+            this.onRunway = true;
             this.move = 0;
             this.delta = .01;
             break;
@@ -133,6 +146,9 @@ Airplane.prototype.movement = function(){
             }
             if(this.path==3){
                 this.obj.rotateZ(Math.PI/8);
+            }
+            if(this.move >= .5){
+                this.onRunway = false;
             }
         }
      this.move +=this.delta;
