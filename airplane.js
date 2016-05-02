@@ -131,6 +131,7 @@ Airplane.prototype.getDirection = function(){
         return direction;
     }
     return null;
+    //return this.curve.getTangentAt(this.move).normalize();
 }
 
 Airplane.prototype.movement = function(){

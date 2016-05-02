@@ -95,7 +95,15 @@ var worldTime = -.25;
 var up = new THREE.Vector3(0, 0, 1);
 var axis = new THREE.Vector3();
 
+stats = new Stats();
+document.body.appendChild(stats.dom);
 
+/*function animate(){
+    requestAnimationFrame(animate);
+    render();
+    stats.update();
+}
+animate();*/
 //Airplanes that are done moving.
 function removeFinished(){
    var i = 0;
@@ -149,6 +157,7 @@ function keydown(event){
 window.addEventListener('keydown', keydown);
 function render(){
     requestAnimationFrame(render);
+    stats.update();
     if(towerCameraActive)
         renderer.render(scene, towerCamera);
     else
@@ -202,6 +211,7 @@ function render(){
                     x.subVectors(planes[j].obj.position, planes[i].obj.position); 
                     var theta = v.angleTo(x);
                     var threshHold = (v.length()*Math.cos(theta))/x.length();
+                    console.log(threshHold);
                     if(threshHold>=1/8){
                         canMove = false;
                     }
