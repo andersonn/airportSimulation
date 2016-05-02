@@ -98,12 +98,6 @@ var axis = new THREE.Vector3();
 stats = new Stats();
 document.body.appendChild(stats.dom);
 
-/*function animate(){
-    requestAnimationFrame(animate);
-    render();
-    stats.update();
-}
-animate();*/
 //Airplanes that are done moving.
 function removeFinished(){
    var i = 0;
@@ -111,8 +105,8 @@ function removeFinished(){
     if(planes[i].finished){
 	var temp = planes[i].removeObject();
 	object.addPlane(temp);
-	scene.remove(temp.object);
 	planes.splice(i, 1);
+    scene.remove(temp.object);
 	i = i -1;
     }
     i++;
