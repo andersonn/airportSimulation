@@ -302,8 +302,6 @@ ControlTower.prototype.findGate = function(){
 			data.gate=this.toGates[i];
 			data.runway=this.toRunway[i];
 			this.openGates[i]=false;
-			console.log("Runway: " + i);
-            console.log(this.toRunway[i]);
             break;
 		}
 		

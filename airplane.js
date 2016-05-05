@@ -178,10 +178,8 @@ Airplane.prototype.update = function(worldTime){
     }
     if(this.move >= 1 && !this.finished){
         if(this.path == 1){
-	        console.log('setting depart time');
 	        this.departureTime = worldTime + 5;
 	        this.goingTo=this.schedule.getCity();
-	        console.log(this.departureTime);
 	    }
 	    this.path+=1;
         this.pathSet();

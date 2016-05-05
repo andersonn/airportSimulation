@@ -2,13 +2,58 @@
 <html>
   <head>
     <title>Airport</title>
+            <!--Splash screen from mrdoob-->
+            <style>
+            html, body {
+                width: 100%;
+                height: 100%;
+            }
+            body {
+                background-color: #ffffff;
+                margin: 0;
+                overflow: hidden;
+                font-family: arial;
+            }
+            #blocker {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0,0,0,0.5);
+            }
+            #instructions {
+                width: 100%;
+                height: 100%;
+                display: -webkit-box;
+                display: -moz-box;
+                display: box;
+                -webkit-box-orient: horizontal;
+                -moz-box-orient: horizontal;
+                box-orient: horizontal;
+                -webkit-box-pack: center;
+                -moz-box-pack: center;
+                box-pack: center;
+                -webkit-box-align: center;
+                -moz-box-align: center;
+                box-align: center;
+                color: #ffffff;
+                text-align: center;
+                cursor: pointer;
+            }
+        </style>
     <script src="src/three.min.js"></script>
     <script src="src/stats.min.js"></script>
     <script src= "src/ColladaLoader2.js"></script>
     <script src = "src/OrbitControls.js"></script>
   </head>
   <body>
-    <center>
+    <div id ="blocker">
+        <div id = "instructions">
+            <span style="font-size:40px">Click to play</span>
+            <br /> Nick Anderson May 5, 2016
+            <br /> Simulates an airport throughout the day.
+            <br />
+            (Arrows = Move, Mouse to look around in top view, 1,2 = Switch Cameras)        </div>
+    </div>
     <script src = "object.js"></script>
     <script src = "controlTower.js"></script>
     <script src = "airplane.js"></script>

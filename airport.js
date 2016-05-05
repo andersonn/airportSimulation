@@ -2,8 +2,24 @@
 var  planes=[];
 var planesToStart = 5;
 var numberOfPlanes = 98;
+
+var material = new THREE.MeshBasicMaterial({
+    color: 0x3bb9ff, 
+    side: THREE.BackSide
+} ), mesh = new THREE.Mesh( new THREE.BoxGeometry(200, 200, 200), material );
+
+//blocker/instructions
+var blocker = document.getElementById( 'blocker' );
+var instructions = document.getElementById('instructions');
+
+instructions.addEventListener( 'click', function (event){
+    instructions.style.display = 'none';
+    blocker.style.display = 'none';
+});
+
 //create the scene
 var scene = new THREE.Scene();
+scene.add(mesh);
 var geometry = new THREE.BoxGeometry(40,0.1, 20);
 var image = new THREE.TextureLoader().load("airport.jpg");
 var material = new THREE.MeshLambertMaterial({map : image});
@@ -37,6 +53,7 @@ scene.add(left);
 scene.add(runway);
 scene.add(terminalGround);
 
+scene.fog = new THREE.Fog(0xd6d6c2, 1, 150);
 
 var loader = new THREE.ColladaLoader();
 var model = new THREE.Object3D();
@@ -149,6 +166,17 @@ function keydown(event){
 }
 
 window.addEventListener('keydown', keydown);
+
+window.addEventListener('resize', onWindowResize, false);
+
+function onWindowResize(){
+    camera.aspect = window.innerWidth/window.innerHeight;
+    camera.updateProjectionMatrix();
+    towerCamera.aspect = window.innerWidth/window.innerHeight;
+    towerCamera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+}
+
 function render(){
     requestAnimationFrame(render);
     stats.update();
@@ -205,11 +233,9 @@ function render(){
                     x.subVectors(planes[j].obj.position, planes[i].obj.position); 
                     var theta = v.angleTo(x);
                     var threshHold = (v.length()*Math.cos(theta))/x.length();
-                    console.log(threshHold);
                     if(threshHold>=1/8){
                         canMove = false;
                     }
-                    //Define runway positions to hold if needed.
                  }
                 }
             }
@@ -218,7 +244,10 @@ function render(){
             }
         }
     }
-
+   
+    if(camera.position.y <= .5){
+        camera.position.y = .5;
+    } 
     removeFinished();    
     worldTime+=.25;
 };
