@@ -18,7 +18,7 @@ Objects.prototype.loadBlue = function(){
         //model.translateX(.2);
         var mod = new THREE.Object3D();
         mod.add(model);
-        for(var i = 0; i<20; i++){
+        for(var i = 0; i<30; i++){
             this.blue.push(mod.clone());
         }
     }.bind(this));
@@ -36,7 +36,7 @@ Objects.prototype.loadPlane = function(){
         model.translateZ(-.6);
         var mod = new THREE.Object3D();
         mod.add(model);
-        for(var i = 0; i<20; i++){
+        for(var i = 0; i<30; i++){
             this.plane.push(mod.clone());
         }
 
